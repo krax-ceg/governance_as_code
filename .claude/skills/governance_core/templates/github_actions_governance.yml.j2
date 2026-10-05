@@ -1,0 +1,37 @@
+name: Governance as Code — Contract Validation
+
+on:
+  pull_request:
+    paths:
+      - "{{ contracts_dir }}/**"
+  push:
+    branches: [main]
+    paths:
+      - "{{ contracts_dir }}/**"
+
+jobs:
+  validate-data-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validator deps
+        run: pip install jsonschema pyyaml
+
+      - name: Validate ODCS data contracts against schema
+        run: |
+          python governance-as-code/ci/validate_yaml.py \
+            --schema governance-as-code/schemas/odcs-data-contract.schema.json \
+            {{ contracts_dir }}/*.yaml
+
+      - name: Validate ODPS data products against schema
+        if: hashFiles('{{ products_dir }}/*.yaml') != ''
+        run: |
+          python governance-as-code/ci/validate_yaml.py \
+            --schema governance-as-code/schemas/odps-data-product.schema.json \
+            {{ products_dir }}/*.yaml

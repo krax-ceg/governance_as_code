@@ -63,6 +63,7 @@
                 <a href="#comparison" class="hover:text-navy transition-colors">Hub vs. Spoke</a>
                 <a href="#roadmap" class="hover:text-navy transition-colors">90-Day Roadmap</a>
                 <a href="#as-code" class="hover:text-navy transition-colors">Why Code</a>
+                <a href="#differentiation" class="hover:text-navy transition-colors">Why Cegeka</a>
                 <a href="#next-steps" class="hover:text-navy transition-colors">Get Started</a>
             </nav>
             <div class="flex items-center space-x-3">
@@ -330,11 +331,58 @@ flowchart TB
             </div>
         </section>
 
-        <!-- Section 6: Call to Action -->
+        <!-- Section 6: Differentiation -->
+        <section id="differentiation" class="space-y-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-2 h-6 bg-navy rounded-sm"></div>
+                <h2 class="text-2xl font-bold text-navy">6. Not a Catalog Tool — and Day-One on Databricks or Fabric</h2>
+            </div>
+            <p class="text-slate leading-relaxed">
+                A governance catalog (Collibra, Purview, Atlan, Immuta) is <em>infrastructure</em> — it gives you a place to register metadata and define policies. It doesn't decide your operating model, write your charters, or author your first contracts for you. The Accelerator is the <em>engagement</em> that installs the operating model and hands over working code — and it's catalog-agnostic, so it doesn't compete with whatever registry the client already owns or is buying.
+            </p>
+            <div class="bg-white rounded-lg border border-divider shadow-sm overflow-hidden">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-navy text-white text-xs uppercase tracking-wider font-semibold">
+                            <th class="p-4">Capability</th>
+                            <th class="p-4">Collibra / Purview / Atlan / Immuta</th>
+                            <th class="p-4">Governance-as-Code Accelerator</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-divider text-slate">
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">What it is</td>
+                            <td class="p-4 text-xs leading-relaxed">A metadata catalog / policy engine you license and operate indefinitely.</td>
+                            <td class="p-4 text-xs leading-relaxed">A fixed-length advisory engagement that installs an operating model and a forkable starter repo, then hands over.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">Organizational design</td>
+                            <td class="p-4 text-xs leading-relaxed">Out of scope — you still have to design your Hub/Spoke model, charters, and RACI yourself.</td>
+                            <td class="p-4 text-xs leading-relaxed">In scope from Tier 1 — charters and RACI are delivered as signed, versioned YAML.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">Day-one platform support</td>
+                            <td class="p-4 text-xs leading-relaxed">Platform-agnostic connectors, configured per client.</td>
+                            <td class="p-4 text-xs leading-relaxed"><strong>Databricks (Unity Catalog) and Microsoft Fabric</strong> onboarding is scripted today — contracts and CI are generated from a live schema scan in hours, not weeks.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">Relationship to your catalog</td>
+                            <td class="p-4 text-xs leading-relaxed">—</td>
+                            <td class="p-4 text-xs leading-relaxed">Complementary, not competing — generated ODCS/ODPS artifacts register into whichever catalog you run or buy.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-xs text-slate/60">
+                Financial-impact figures cited elsewhere in this brochure ($12.9M/yr average cost of poor data quality; 15–25% revenue-leakage protection) are industry estimates carried over from the source diagnostic, pending a client-specific or third-party-sourced citation — flag this explicitly if challenged in a proposal review.
+            </p>
+        </section>
+
+        <!-- Section 7: Call to Action -->
         <section id="next-steps" class="space-y-6">
             <div class="flex items-center space-x-3">
                 <div class="w-2 h-6 bg-navy rounded-sm"></div>
-                <h2 class="text-2xl font-bold text-navy">6. Where to Start</h2>
+                <h2 class="text-2xl font-bold text-navy">7. Where to Start</h2>
             </div>
 
             <div class="bg-navy text-white p-8 rounded-lg shadow-sm space-y-4">

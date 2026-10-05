@@ -1,0 +1,52 @@
+# Azure DevOps equivalent of ../github-actions/validate-governance-config.yml.
+# Wire this in instead of the GitHub Actions version when the client's fork
+# of this accelerator lives in Azure DevOps (see Phase 3, Days 81-90 of
+# ../../../playbook/phase-3-automate-scale.md). The onboarding skills under
+# ../../../.claude/skills/ auto-detect which of the two to scaffold based on
+# the target repo's git remote (governance_core/detect_git_remote.py).
+
+trigger:
+  branches:
+    include: [main]
+  paths:
+    include:
+      - governance-as-code/*
+
+pr:
+  branches:
+    include: [main]
+  paths:
+    include:
+      - governance-as-code/*
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "3.12"
+
+  - script: pip install jsonschema pyyaml
+    displayName: "Install validator deps"
+
+  - script: |
+      python governance-as-code/ci/validate_yaml.py \
+        --schema governance-as-code/schemas/council-charter.schema.json \
+        governance-as-code/councils/hub-charter.yaml \
+        governance-as-code/examples/procurement-spoke/spoke-procurement.yaml
+    displayName: "Validate council charters against schema"
+
+  - script: |
+      python governance-as-code/ci/validate_yaml.py \
+        --schema governance-as-code/schemas/raci-matrix.schema.json \
+        governance-as-code/examples/procurement-spoke/raci-procurement.yaml
+    displayName: "Validate RACI matrices against schema"
+
+  - script: |
+      curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64_static
+      chmod +x opa
+    displayName: "Install OPA"
+
+  - script: ./opa test governance-as-code/policies -v
+    displayName: "Run policy tests"

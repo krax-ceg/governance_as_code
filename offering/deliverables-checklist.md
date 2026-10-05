@@ -4,6 +4,7 @@ Each tier ends with a client sign-off against this checklist. Use this as the ex
 
 ## Tier 1 — Assess & Charter (Days 1–30)
 
+- [ ] Maturity assessment completed (`../offering/maturity-assessment-instrument.xlsx`) and recommended starting Wave agreed with the client
 - [ ] Executive Sponsor and Data Governance Manager formally appointed (named individuals, not roles)
 - [ ] Operational Governance Committee Charter drafted and signed, including voting mechanics
 - [ ] Domain Business Owners and Data Stewards identified for the pilot Spoke(s)
@@ -15,7 +16,7 @@ Each tier ends with a client sign-off against this checklist. Use this as the ex
 
 - [ ] Metadata scan complete for pilot domain(s); sensitive/PII attributes tagged
 - [ ] Lineage dependencies mapped for in-scope pipelines
-- [ ] At least one pilot data contract drafted in YAML and reviewed by domain Data Steward
+- [ ] At least one pilot data contract drafted in YAML (ODCS format — generated via the Databricks/Fabric onboarding skill where the pilot platform is one of those two, see `.claude/skills/`) and reviewed by domain Data Steward
 - [ ] Baseline RBAC groups aligned to non-overlapping roles
 - [ ] Column-level masking live on tagged sensitive datasets
 

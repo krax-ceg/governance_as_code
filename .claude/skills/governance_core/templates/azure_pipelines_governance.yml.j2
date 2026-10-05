@@ -1,0 +1,40 @@
+trigger:
+  branches:
+    include: [main]
+  paths:
+    include:
+      - {{ contracts_dir }}/*
+
+pr:
+  branches:
+    include: [main]
+  paths:
+    include:
+      - {{ contracts_dir }}/*
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "3.12"
+
+  - script: pip install jsonschema pyyaml
+    displayName: "Install validator deps"
+
+  - script: |
+      python governance-as-code/ci/validate_yaml.py \
+        --schema governance-as-code/schemas/odcs-data-contract.schema.json \
+        {{ contracts_dir }}/*.yaml
+    displayName: "Validate ODCS data contracts against schema"
+
+  - script: |
+      if ls {{ products_dir }}/*.yaml 1> /dev/null 2>&1; then
+        python governance-as-code/ci/validate_yaml.py \
+          --schema governance-as-code/schemas/odps-data-product.schema.json \
+          {{ products_dir }}/*.yaml
+      else
+        echo "No data products to validate yet."
+      fi
+    displayName: "Validate ODPS data products against schema"
