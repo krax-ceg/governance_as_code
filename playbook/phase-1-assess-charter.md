@@ -9,13 +9,15 @@
 - Formally appoint the Executive Sponsor (C-suite) and Data Governance Manager.
 - Draft the core Operational Governance Committee Charter — this is the Hub charter; instantiate from `../governance-as-code/councils/hub-charter.yaml`.
 - Specify voting mechanics (default: 2/3 majority for global metadata schema or standard-protocol changes — see the YAML template for the configurable threshold).
+- Run the governing-document inventory (`../offering/governing-document-inventory.md`) in parallel — existing policies, prior charters, and training materials need to be surfaced before the Hub charter is ratified, so it doesn't conflict with or silently duplicate something that already has institutional buy-in.
 
 **Workshop:** `workshop-agendas/chartering-kickoff.md`
 
 ## Days 11–20: Accountability Mapping
 
 - Identify domain Business Owners and appoint Data Stewards for the pilot Spoke(s).
-- Build the RACI matrix using `../governance-as-code/raci/raci-matrix.template.yaml` — one entry per governance decision type (schema change, access grant, metric certification, cross-domain arbitration).
+- Choose a decision-rights framework per domain — RACI by default, or DACI/RAPID where it fits the client's decision shape better (see `workshop-agendas/raci-mapping-workshop.md`).
+- Build the matrix using the chosen template: `../governance-as-code/raci/raci-matrix.template.yaml`, `daci-matrix.template.yaml`, or `rapid-matrix.template.yaml` — one entry per governance decision type (schema change, access grant, metric certification, cross-domain arbitration).
 
 **Workshop:** `workshop-agendas/raci-mapping-workshop.md`
 
