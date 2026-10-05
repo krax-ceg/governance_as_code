@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Governance-as-Code Accelerator — Maturity Assessment Instrument</title>
+<style>
+  :root { color-scheme: light; }
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --grid:           #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-1:       #2a78d6; /* Current */
+    --series-2:       #eb6834; /* Target */
+    --success:        #006300;
+    --warn:           #fab219;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --grid:           #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --series-1:       #3987e5;
+      --series-2:       #d95926;
+      --success:        #0ca30c;
+      --warn:           #fab219;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page:           #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --grid:           #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --series-1:       #3987e5;
+    --series-2:       #d95926;
+    --success:        #0ca30c;
+    --warn:           #fab219;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page);
+    color: var(--text-primary);
+  }
+  .viz-root { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 17px; margin: 0 0 12px; }
+  h3 { font-size: 14px; margin: 0 0 8px; color: var(--text-secondary); }
+  p { line-height: 1.55; color: var(--text-secondary); }
+  .subtitle { color: var(--text-secondary); margin: 0 0 24px; font-size: 14px; }
+  .card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  a { color: var(--series-1); }
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+  button {
+    font-family: inherit;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    background: var(--surface-1);
+    color: var(--text-primary);
+    border-radius: 6px;
+    padding: 7px 12px;
+    cursor: pointer;
+  }
+  button:hover { border-color: var(--series-1); }
+  button.primary { background: var(--series-1); color: #fff; border-color: var(--series-1); }
+  .spacer { flex: 1; }
+
+  .dim-block { margin-bottom: 24px; }
+  .dim-block:last-child { margin-bottom: 0; }
+  .dim-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .dim-subtotal { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--text-secondary); }
+  table.q-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.q-table th { text-align: left; color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+  table.q-table td { padding: 10px 8px; border-bottom: 1px solid var(--grid); vertical-align: middle; }
+  table.q-table td.kpi { color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .score-group { position: relative; display: inline-flex; gap: 4px; }
+  .score-group input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .score-group label {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 6px;
+    border: 1px solid var(--border);
+    font-size: 12px; font-variant-numeric: tabular-nums;
+    cursor: pointer; color: var(--text-secondary);
+  }
+  .score-group input:checked + label {
+    background: var(--series-1); color: #fff; border-color: var(--series-1); font-weight: 600;
+  }
+  .score-group input:focus-visible + label { outline: 2px solid var(--series-1); outline-offset: 2px; }
+
+  .results-grid { display: grid; grid-template-columns: 1.6fr 0.8fr 0.8fr 1fr; gap: 0; font-size: 13px; }
+  .results-grid .hdr { color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+  .results-grid .cell { padding: 8px; border-bottom: 1px solid var(--grid); display: flex; align-items: center; font-variant-numeric: tabular-nums; }
+  .results-grid input[type="number"] {
+    width: 64px; font-family: inherit; font-size: 13px; font-variant-numeric: tabular-nums;
+    border: 1px solid var(--border); border-radius: 6px; padding: 4px 6px;
+    background: var(--surface-1); color: var(--text-primary);
+  }
+  .weight-check { margin-top: 10px; font-size: 12px; color: var(--text-muted); }
+  .weight-check.bad { color: #d03b3b; }
+
+  .overall-row { display: flex; align-items: baseline; gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--grid); }
+  .overall-score { font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .wave-badge { font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); }
+
+  .wheel-layout { display: grid; grid-template-columns: 420px 1fr; gap: 24px; align-items: start; }
+  @media (max-width: 760px) { .wheel-layout { grid-template-columns: 1fr; } }
+  .legend { display: flex; gap: 16px; margin-top: 8px; font-size: 12px; color: var(--text-secondary); }
+  .legend-swatch { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-swatch .dot { width: 10px; height: 10px; border-radius: 2px; }
+  .activity-list { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+  .activity-list li { padding: 10px 0; border-bottom: 1px solid var(--grid); }
+  .activity-list li:last-child { border-bottom: none; }
+  .activity-list .dim-name { font-weight: 600; margin-bottom: 2px; }
+  .activity-list .activity-text { color: var(--text-secondary); }
+
+  #tooltip {
+    position: fixed; pointer-events: none; z-index: 10;
+    background: var(--text-primary); color: var(--surface-1);
+    font-size: 12px; padding: 6px 9px; border-radius: 6px;
+    transform: translate(-50%, -120%);
+    opacity: 0; transition: opacity 0.08s ease;
+    white-space: nowrap;
+  }
+  #tooltip.visible { opacity: 1; }
+
+  details.table-view summary { cursor: pointer; font-size: 13px; color: var(--series-1); margin-top: 12px; }
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+  table.data-table th, table.data-table td { padding: 6px 8px; border-bottom: 1px solid var(--grid); text-align: left; font-variant-numeric: tabular-nums; }
+  table.data-table th { color: var(--text-muted); font-weight: 600; }
+
+  .readme-list { margin: 0; padding-left: 18px; color: var(--text-secondary); font-size: 13.5px; line-height: 1.6; }
+  .readme-list li { margin-bottom: 6px; }
+  code { background: var(--grid); border-radius: 4px; padding: 1px 5px; font-size: 12px; }
+  .status-pill { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--grid); color: var(--text-secondary); }
+
+  @media print {
+    :root { color-scheme: light; }
+    body { background: #fff; color: #1a1a19; }
+    .toolbar, #tooltip { display: none !important; }
+    .card {
+      background: #fff;
+      border: 1px solid #ccc;
+      box-shadow: none;
+      break-inside: avoid;
+    }
+    details { break-inside: avoid; }
+    a { color: #1a1a19; text-decoration: underline; }
+  }
+</style>
+</head>
+<body>
+<div class="viz-root" data-palette="#2a78d6,#eb6834,#1baf7a,#eda100,#e87ba4,#008300,#4a3aa7,#e34948">
+
+  <div class="toolbar">
+    <button id="theme-toggle" type="button">Toggle dark mode</button>
+    <span class="spacer"></span>
+    <button id="reset-btn" type="button">Reset all scores</button>
+    <button id="copy-btn" type="button">Copy results summary</button>
+    <button id="print-btn" type="button" class="primary">Print / Save PDF</button>
+  </div>
+
+  <h1>Governance-as-Code Accelerator — Maturity Assessment Instrument</h1>
+  <p class="subtitle">Self-contained, offline, deterministic scoring tool. No network calls, no external dependencies — open this file directly in any browser.</p>
+
+  <div class="card">
+    <h2>Purpose &amp; how to use it</h2>
+    <p>Converts the source strategy report's telemetry/KPI matrix (COV, VPL, ARI, PDR, QVD, CC, APF, EAR, OCI, DOR, SMC, SDDR) into a scored, repeatable questionnaire. This is a <strong>deterministic instrument</strong>: the same answers always produce the same overall score and Wave recommendation, regardless of which consultant runs it.</p>
+    <ol class="readme-list">
+      <li>For each of the 16 questions below, pick a score from 0 (not in place / worst case) to 5 (fully mature / best case). All scores start at 0 so the page opens with a valid, error-free Wave&nbsp;1 result — overwrite every row with the client's real answers before trusting the Results section.</li>
+      <li>Dimension subtotals, weighted contribution, and the overall score are computed automatically as you score — nothing to calculate by hand.</li>
+      <li>The overall score is looked up against the Wave Thresholds table to recommend which of the 90-Day Roadmap's three Waves the client should start in.</li>
+      <li>Set a Target score (0–100) per dimension in the Results section (defaults to 70 — the Wave 3 threshold — as a "fully automated" aspiration; recalibrate per client). The Maturity Wheel plots Current vs. Target as a radar chart for live use in the workshop, alongside a representative activity per dimension to anchor the discussion.</li>
+      <li>Your answers are saved to this browser's local storage automatically (not sent anywhere) so you can close and reopen the file without losing progress on the same machine. Use <strong>Print / Save PDF</strong> or <strong>Copy results summary</strong> to hand off results elsewhere.</li>
+    </ol>
+    <h3 style="margin-top:16px;">Scope note</h3>
+    <p style="font-size:13.5px;">Dimension weights (25% each by default) and the Wave thresholds (40 / 70) are starting defaults calibrated against the illustrative client in the source report, not an empirically derived industry standard — recalibrate them per client/industry if you have a better basis, and treat recalibration as a deliberate decision, not a silent edit.</p>
+    <h3 style="margin-top:16px;">Related artifacts in this repo</h3>
+    <ul class="readme-list">
+      <li><code>governance-as-code/schemas/core10-and-31-attribute-framework.md</code> — the metadata standard the "Siloed Metadata Coverage" question (Q4.2) is scored against.</li>
+      <li><code>offering/offering-overview.md</code>, <code>pricing-tiers.md</code> — this assessment is typically run during Tier 1 (Assess &amp; Charter) to confirm which Wave/Tier mix to propose.</li>
+      <li><code>governance-as-code/raci/</code> — the decision-rights matrix (RACI, DACI, or RAPID) chosen for the client feeds the "Hub-and-Spoke charter" question (Q4.4) and the Maturity Wheel discussion.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Questionnaire</h2>
+    <p style="font-size:13px; margin-top:-6px;">Score each question 0 (not in place) to 5 (fully mature).</p>
+    <div id="questionnaire"></div>
+  </div>
+
+  <div class="card">
+    <h2>Results</h2>
+    <div class="results-grid" id="results-grid"></div>
+    <div class="weight-check" id="weight-check"></div>
+    <div class="overall-row" role="status" aria-live="polite">
+      <div>
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.02em; color:var(--text-muted);">Overall Maturity Score</div>
+        <div class="overall-score" id="overall-score">0</div>
+      </div>
+      <div>
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.02em; color:var(--text-muted); margin-bottom:4px;">Recommended Starting Wave</div>
+        <span class="wave-badge" id="wave-badge">—</span>
+      </div>
+    </div>
+    <details class="table-view">
+      <summary>Wave thresholds (reference table)</summary>
+      <table class="data-table">
+        <thead><tr><th>Min score</th><th>Wave</th><th>Recommended starting point</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>Wave 1</td><td>Foundations, Roles &amp; Chartering (Days 1–30)</td></tr>
+          <tr><td>40</td><td>Wave 2</td><td>Mapping, Contracts &amp; Baseline Security (Days 31–60)</td></tr>
+          <tr><td>70</td><td>Wave 3</td><td>Automation &amp; Advanced Layers — PBAC &amp; JIT (Days 61–90)</td></tr>
+        </tbody>
+      </table>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>Maturity Wheel</h2>
+    <p style="font-size:13px; margin-top:-6px;">Current vs. target score per dimension, for live use in the workshop. The Activities column is a conversation-starter, not an exhaustive plan — use it to anchor the "what gets us from here to target" discussion live with the client.</p>
+    <div class="wheel-layout">
+      <div>
+        <svg id="radar" viewBox="0 0 420 420" role="img" aria-labelledby="radar-title"></svg>
+        <div class="legend">
+          <span class="legend-swatch"><span class="dot" style="background:var(--series-1);"></span>Current</span>
+          <span class="legend-swatch"><span class="dot" style="background:var(--series-2);"></span>Target</span>
+        </div>
+      </div>
+      <ul class="activity-list" id="activity-list"></ul>
+    </div>
+    <details class="table-view">
+      <summary>Table view (current vs. target)</summary>
+      <table class="data-table" id="wheel-table">
+        <thead><tr><th>Dimension</th><th>Current</th><th>Target</th></tr></thead>
+        <tbody id="wheel-table-body"></tbody>
+      </table>
+    </details>
+  </div>
+
+</div>
+<div id="tooltip"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var DIMENSIONS = [
+    { key: "velocity",       name: "Operational & Lifecycle Velocity",        activity: "Move assets from raw ingestion to a registered Gold product in days, not months." },
+    { key: "quality",        name: "Data Quality & Stability",                activity: "Automate statistical drift monitoring (K-S test / PSI) on ingestion, not just structural checks." },
+    { key: "security",       name: "Security & Dynamic Compliance",           activity: "Move access control to evaluate context (device, location, time, relationship), not static role lists only." },
+    { key: "accountability", name: "Departmental & Accountability Maturity",  activity: "Get Data Owners approving or denying access requests within hours, not days." }
+  ];
+
+  var QUESTIONS = [
+    { id: 1,  dim: "velocity",       text: "Assets move from raw ingestion to a registered Gold product in days, not months.", kpi: "COV" },
+    { id: 2,  dim: "velocity",       text: "Contract/schema validation runs automatically in CI in well under a minute (vs. manual review).", kpi: "VPL" },
+    { id: 3,  dim: "velocity",       text: "New projects reuse existing Gold data products more often than they build new raw pipelines.", kpi: "ARI" },
+    { id: 4,  dim: "velocity",       text: "Business units are not routing around a central team's backlog to get data delivered.", kpi: "COV / Backlog" },
+    { id: 5,  dim: "quality",        text: "Statistical drift monitoring (e.g. K-S test / PSI) runs automatically on ingestion, not just structural checks.", kpi: "PDR" },
+    { id: 6,  dim: "quality",        text: "Anomalous data is automatically quarantined (Dead Letter Queue) rather than silently reaching dashboards.", kpi: "QVD" },
+    { id: 7,  dim: "quality",        text: "Quarantined/failed payloads are typically resolved within hours, not days.", kpi: "QVD" },
+    { id: 8,  dim: "quality",        text: "Data contracts enforce schema completeness checks (e.g. all required source feeds present) in CI.", kpi: "CC" },
+    { id: 9,  dim: "security",       text: "Access control evaluates context (device, location, time, relationship) rather than static role lists only.", kpi: "APF" },
+    { id: 10, dim: "security",       text: "Just-in-time, time-bound access grants are the norm rather than standing permanent permissions.", kpi: "EAR" },
+    { id: 11, dim: "security",       text: "There are few or no manual Active Directory group mappings that bypass the central entitlement system.", kpi: "OCI" },
+    { id: 12, dim: "security",       text: "Every policy decision and schema change is written to an immutable, auditable log.", kpi: "APF / OCI" },
+    { id: 13, dim: "accountability", text: "Data Owners approve or deny access requests within hours, not days.", kpi: "DOR" },
+    { id: 14, dim: "accountability", text: "Domain-managed data assets meet the Core 10 metadata attributes (see core10-and-31-attribute-framework.md).", kpi: "SMC" },
+    { id: 15, dim: "accountability", text: "Shadow spreadsheets / untracked database replicas are measurably shrinking month over month.", kpi: "SDDR" },
+    { id: 16, dim: "accountability", text: "A Hub-and-Spoke charter with clear voting/arbitration rules is signed and in active use.", kpi: "Charter" }
+  ];
+
+  var WAVES = [
+    { min: 0,  wave: "Wave 1", desc: "Foundations, Roles & Chartering (Days 1–30)" },
+    { min: 40, wave: "Wave 2", desc: "Mapping, Contracts & Baseline Security (Days 31–60)" },
+    { min: 70, wave: "Wave 3", desc: "Automation & Advanced Layers — PBAC & JIT (Days 61–90)" }
+  ];
+
+  var STORAGE_KEY = "gac-maturity-assessment-v1";
+
+  var state = {
+    scores: {},
+    weights: {},
+    targets: {}
+  };
+  QUESTIONS.forEach(function (q) { state.scores[q.id] = 0; });
+  DIMENSIONS.forEach(function (d) { state.weights[d.key] = 25; state.targets[d.key] = 70; });
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      var saved = JSON.parse(raw);
+      if (saved.scores) Object.assign(state.scores, saved.scores);
+      if (saved.weights) Object.assign(state.weights, saved.weights);
+      if (saved.targets) Object.assign(state.targets, saved.targets);
+    } catch (e) { /* ignore corrupt storage */ }
+  }
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable, e.g. file:// in some browsers */ }
+  }
+
+  function dimensionSubtotal(dimKey) {
+    var qs = QUESTIONS.filter(function (q) { return q.dim === dimKey; });
+    var sum = qs.reduce(function (acc, q) { return acc + Number(state.scores[q.id] || 0); }, 0);
+    var avg = sum / qs.length;
+    return (avg / 5) * 100;
+  }
+
+  function overallScore() {
+    var total = 0;
+    var wSum = weightSum() || 100;
+    DIMENSIONS.forEach(function (d) {
+      total += dimensionSubtotal(d.key) * (Number(state.weights[d.key] || 0) / wSum);
+    });
+    return total;
+  }
+
+  function weightSum() {
+    return DIMENSIONS.reduce(function (acc, d) { return acc + Number(state.weights[d.key] || 0); }, 0);
+  }
+
+  function recommendedWave(score) {
+    var match = WAVES[0];
+    WAVES.forEach(function (w) { if (score >= w.min) match = w; });
+    return match;
+  }
+
+  function fmt(n) { return (Math.round(n * 10) / 10).toString(); }
+
+  // ---------- render: questionnaire ----------
+  function renderQuestionnaire() {
+    var container = document.getElementById("questionnaire");
+    container.innerHTML = "";
+    DIMENSIONS.forEach(function (d) {
+      var block = document.createElement("div");
+      block.className = "dim-block";
+
+      var header = document.createElement("div");
+      header.className = "dim-header";
+      var h = document.createElement("h3");
+      h.textContent = d.name;
+      header.appendChild(h);
+      var subtotalSpan = document.createElement("span");
+      subtotalSpan.className = "dim-subtotal";
+      subtotalSpan.id = "subtotal-label-" + d.key;
+      header.appendChild(subtotalSpan);
+      block.appendChild(header);
+
+      var table = document.createElement("table");
+      table.className = "q-table";
+      table.innerHTML = "<thead><tr><th style=\"width:60%\">Question</th><th>KPI</th><th>Score</th></tr></thead>";
+      var tbody = document.createElement("tbody");
+      QUESTIONS.filter(function (q) { return q.dim === d.key; }).forEach(function (q) {
+        var tr = document.createElement("tr");
+        var tdText = document.createElement("td");
+        tdText.textContent = "Q" + q.id + ". " + q.text;
+        var tdKpi = document.createElement("td");
+        tdKpi.className = "kpi";
+        tdKpi.textContent = q.kpi;
+        var tdScore = document.createElement("td");
+        var group = document.createElement("div");
+        group.className = "score-group";
+        group.setAttribute("role", "radiogroup");
+        group.setAttribute("aria-label", "Score for question " + q.id);
+        for (var s = 0; s <= 5; s++) {
+          var id = "q" + q.id + "-s" + s;
+          var input = document.createElement("input");
+          input.type = "radio";
+          input.name = "q" + q.id;
+          input.id = id;
+          input.value = s;
+          input.checked = Number(state.scores[q.id]) === s;
+          input.addEventListener("change", (function (qid, val) {
+            return function () { state.scores[qid] = val; saveState(); renderResults(); };
+          })(q.id, s));
+          var label = document.createElement("label");
+          label.setAttribute("for", id);
+          label.textContent = s;
+          group.appendChild(input);
+          group.appendChild(label);
+        }
+        tdScore.appendChild(group);
+        tr.appendChild(tdText);
+        tr.appendChild(tdKpi);
+        tr.appendChild(tdScore);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      block.appendChild(table);
+      container.appendChild(block);
+    });
+  }
+
+  // ---------- render: results ----------
+  function renderResults() {
+    var grid = document.getElementById("results-grid");
+    grid.innerHTML =
+      '<div class="hdr">Dimension</div><div class="hdr">Subtotal (0–100)</div>' +
+      '<div class="hdr">Weight (%)</div><div class="hdr">Target (0–100)</div>';
+    DIMENSIONS.forEach(function (d) {
+      var subtotal = dimensionSubtotal(d.key);
+
+      var cellName = document.createElement("div");
+      cellName.className = "cell";
+      cellName.textContent = d.name;
+
+      var cellSubtotal = document.createElement("div");
+      cellSubtotal.className = "cell";
+      cellSubtotal.textContent = fmt(subtotal);
+
+      var cellWeight = document.createElement("div");
+      cellWeight.className = "cell";
+      var weightInput = document.createElement("input");
+      weightInput.type = "number";
+      weightInput.min = "0";
+      weightInput.max = "100";
+      weightInput.value = state.weights[d.key];
+      weightInput.addEventListener("input", function () {
+        state.weights[d.key] = Number(weightInput.value);
+        saveState();
+        renderResults();
+      });
+      cellWeight.appendChild(weightInput);
+
+      var cellTarget = document.createElement("div");
+      cellTarget.className = "cell";
+      var targetInput = document.createElement("input");
+      targetInput.type = "number";
+      targetInput.min = "0";
+      targetInput.max = "100";
+      targetInput.value = state.targets[d.key];
+      targetInput.addEventListener("input", function () {
+        state.targets[d.key] = Number(targetInput.value);
+        saveState();
+        renderWheel();
+      });
+      cellTarget.appendChild(targetInput);
+
+      grid.appendChild(cellName);
+      grid.appendChild(cellSubtotal);
+      grid.appendChild(cellWeight);
+      grid.appendChild(cellTarget);
+
+      var label = document.getElementById("subtotal-label-" + d.key);
+      if (label) label.textContent = fmt(subtotal) + " / 100";
+    });
+
+    var wSum = weightSum();
+    var wc = document.getElementById("weight-check");
+    wc.textContent = "Weight check: " + wSum + "% (must equal 100%)";
+    wc.className = "weight-check" + (wSum !== 100 ? " bad" : "");
+
+    var overall = overallScore();
+    document.getElementById("overall-score").textContent = fmt(overall);
+    var wave = recommendedWave(overall);
+    var badge = document.getElementById("wave-badge");
+    badge.textContent = wave.wave + " — " + wave.desc;
+
+    renderWheel();
+  }
+
+  // ---------- render: maturity wheel (radar chart) ----------
+  var NS = "http://www.w3.org/2000/svg";
+  function svgEl(tag, attrs) {
+    var el = document.createElementNS(NS, tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  function axisPoint(index, value, cx, cy, r) {
+    var angle = (-90 + index * (360 / DIMENSIONS.length)) * Math.PI / 180;
+    var dist = (value / 100) * r;
+    return { x: cx + dist * Math.cos(angle), y: cy + dist * Math.sin(angle) };
+  }
+
+  function renderWheel() {
+    var svg = document.getElementById("radar");
+    svg.innerHTML = "";
+    var cx = 210, cy = 210, r = 150;
+
+    svg.appendChild(svgEl("title", {})).textContent = "Maturity Wheel: current vs target score per dimension";
+
+    // grid rings
+    [25, 50, 75, 100].forEach(function (level) {
+      var pts = DIMENSIONS.map(function (d, i) {
+        var p = axisPoint(i, level, cx, cy, r);
+        return p.x + "," + p.y;
+      }).join(" ");
+      svg.appendChild(svgEl("polygon", {
+        points: pts, fill: "none", stroke: "var(--grid)", "stroke-width": "1"
+      }));
+    });
+
+    // axis lines + labels
+    DIMENSIONS.forEach(function (d, i) {
+      var p = axisPoint(i, 100, cx, cy, r);
+      svg.appendChild(svgEl("line", {
+        x1: cx, y1: cy, x2: p.x, y2: p.y, stroke: "var(--baseline)", "stroke-width": "1"
+      }));
+      var lp = axisPoint(i, 122, cx, cy, r);
+      var anchor = "middle";
+      if (lp.x < cx - 5) anchor = "end";
+      else if (lp.x > cx + 5) anchor = "start";
+      var words = d.name.split(" ");
+      var text = svgEl("text", {
+        x: lp.x, y: lp.y, "text-anchor": anchor,
+        "font-size": "11", fill: "var(--text-secondary)", "font-family": "system-ui, sans-serif"
+      });
+      // wrap into up to 3 lines
+      var lines = [], cur = "";
+      words.forEach(function (w) {
+        if ((cur + " " + w).trim().length > 16) { lines.push(cur.trim()); cur = w; }
+        else { cur = (cur + " " + w).trim(); }
+      });
+      if (cur) lines.push(cur);
+      lines.forEach(function (line, li) {
+        var tspan = svgEl("tspan", { x: lp.x, dy: li === 0 ? 0 : 12 });
+        tspan.textContent = line;
+        text.appendChild(tspan);
+      });
+      svg.appendChild(text);
+    });
+
+    function seriesPolygon(getValue, colorVar, dashed) {
+      var pts = DIMENSIONS.map(function (d, i) { return axisPoint(i, getValue(d), cx, cy, r); });
+      var pointsAttr = pts.map(function (p) { return p.x + "," + p.y; }).join(" ");
+      var poly = svgEl("polygon", {
+        points: pointsAttr,
+        fill: "var(" + colorVar + ")", "fill-opacity": dashed ? "0.10" : "0.16",
+        stroke: "var(" + colorVar + ")", "stroke-width": "2",
+        "stroke-dasharray": dashed ? "5,4" : "none"
+      });
+      svg.appendChild(poly);
+      pts.forEach(function (p, i) {
+        var dot = svgEl("circle", {
+          cx: p.x, cy: p.y, r: "4.5",
+          fill: "var(" + colorVar + ")", stroke: "var(--surface-1)", "stroke-width": "1.5",
+          tabindex: "0"
+        });
+        var d = DIMENSIONS[i];
+        dot.addEventListener("mouseenter", function (e) { showTooltip(e, d, getValue(d), colorVar === "--series-1" ? "Current" : "Target"); });
+        dot.addEventListener("mousemove", function (e) { positionTooltip(e); });
+        dot.addEventListener("mouseleave", hideTooltip);
+        dot.addEventListener("focus", function (e) { showTooltip(e, d, getValue(d), colorVar === "--series-1" ? "Current" : "Target"); });
+        dot.addEventListener("blur", hideTooltip);
+        svg.appendChild(dot);
+      });
+    }
+
+    seriesPolygon(function (d) { return state.targets[d.key]; }, "--series-2", true);
+    seriesPolygon(function (d) { return dimensionSubtotal(d.key); }, "--series-1", false);
+
+    // activity list
+    var list = document.getElementById("activity-list");
+    list.innerHTML = "";
+    DIMENSIONS.forEach(function (d) {
+      var li = document.createElement("li");
+      var name = document.createElement("div");
+      name.className = "dim-name";
+      name.textContent = d.name;
+      var act = document.createElement("div");
+      act.className = "activity-text";
+      act.textContent = d.activity;
+      li.appendChild(name);
+      li.appendChild(act);
+      list.appendChild(li);
+    });
+
+    // table view
+    var tbody = document.getElementById("wheel-table-body");
+    tbody.innerHTML = "";
+    DIMENSIONS.forEach(function (d) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + d.name + "</td><td>" + fmt(dimensionSubtotal(d.key)) + "</td><td>" + fmt(state.targets[d.key]) + "</td>";
+      tbody.appendChild(tr);
+    });
+  }
+
+  function showTooltip(e, dim, value, seriesLabel) {
+    var tip = document.getElementById("tooltip");
+    tip.textContent = dim.name + " — " + seriesLabel + ": " + fmt(value);
+    tip.classList.add("visible");
+    positionTooltip(e);
+  }
+  function positionTooltip(e) {
+    var tip = document.getElementById("tooltip");
+    var x = e.clientX, y = e.clientY;
+    if (x === undefined && e.target) {
+      var rect = e.target.getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top;
+    }
+    tip.style.left = x + "px";
+    tip.style.top = y + "px";
+  }
+  function hideTooltip() {
+    document.getElementById("tooltip").classList.remove("visible");
+  }
+
+  // ---------- toolbar ----------
+  document.getElementById("reset-btn").addEventListener("click", function () {
+    if (!confirm("Reset all scores, weights, and targets to defaults?")) return;
+    QUESTIONS.forEach(function (q) { state.scores[q.id] = 0; });
+    DIMENSIONS.forEach(function (d) { state.weights[d.key] = 25; state.targets[d.key] = 70; });
+    saveState();
+    renderQuestionnaire();
+    renderResults();
+  });
+
+  document.getElementById("print-btn").addEventListener("click", function () { window.print(); });
+
+  document.getElementById("copy-btn").addEventListener("click", function () {
+    var lines = ["Governance-as-Code Maturity Assessment — Results", ""];
+    DIMENSIONS.forEach(function (d) {
+      lines.push(d.name + ": " + fmt(dimensionSubtotal(d.key)) + " / 100 (target " + fmt(state.targets[d.key]) + ")");
+    });
+    var overall = overallScore();
+    var wave = recommendedWave(overall);
+    lines.push("");
+    lines.push("Overall Maturity Score: " + fmt(overall) + " / 100");
+    lines.push("Recommended Starting Wave: " + wave.wave + " — " + wave.desc);
+    var text = lines.join("\n");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        alert("Results summary copied to clipboard.");
+      }, function () { window.prompt("Copy the summary below:", text); });
+    } else {
+      window.prompt("Copy the summary below:", text);
+    }
+  });
+
+  var THEME_KEY = "gac-maturity-theme";
+  document.getElementById("theme-toggle").addEventListener("click", function () {
+    var current = document.documentElement.getAttribute("data-theme");
+    var next = current === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+  });
+  (function initTheme() {
+    try {
+      var saved = localStorage.getItem(THEME_KEY);
+      if (saved) document.documentElement.setAttribute("data-theme", saved);
+    } catch (e) {}
+  })();
+
+  // ---------- init ----------
+  loadState();
+  renderQuestionnaire();
+  renderResults();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+# DACI matrix template — alternative to raci-matrix.template.yaml for
+# clients whose decisions are more initiative/approval-shaped (a proposal
+# gets driven to a recommendation, then approved) than ongoing operational
+# work. Pick one framework per domain during the RACI Mapping workshop
+# (../../playbook/workshop-agendas/raci-mapping-workshop.md).
+# Validate against ../schemas/daci-matrix.schema.json
+# "driver" and "approver" must each be exactly one role.
+
+domain: "{{domain_name}}"
+
+decisions:
+  - decision_type: "Local schema change (domain-owned asset)"
+    driver: "Data Steward"
+    approver: "Domain Business Owner"
+    contributors: ["Data Engineer"]
+    informed: ["Data Governance Manager"]
+
+  - decision_type: "Schema change to shared/global catalog"
+    driver: "Hub Architect"
+    approver: "Central Hub Committee"
+    contributors: ["Data Steward", "Domain Business Owner"]
+    informed: ["Executive Sponsor"]
+
+  - decision_type: "New data contract approval"
+    driver: "Data Steward"
+    approver: "Domain Business Owner"
+    contributors: ["Data Engineer", "Downstream consumer domains"]
+    informed: ["Data Governance Manager"]
+
+  - decision_type: "Cross-domain metric collision resolution"
+    driver: "Data Steward (originating domain)"
+    approver: "Central Hub Committee"
+    contributors: ["Data Stewards of affected domains"]
+    informed: ["Executive Sponsor"]
+
+  - decision_type: "Access grant/revocation"
+    driver: "Data Steward"
+    approver: "Domain Business Owner"
+    contributors: ["Security/IAM team"]
+    informed: ["Data Governance Manager"]
+
+  - decision_type: "Sensitive/PII tagging sign-off"
+    driver: "Data Engineer"
+    approver: "Data Governance Manager"
+    contributors: ["Legal/Compliance"]
+    informed: ["Domain Business Owner"]

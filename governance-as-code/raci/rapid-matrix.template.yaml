@@ -1,0 +1,52 @@
+# RAPID matrix template — alternative to raci-matrix.template.yaml for
+# clients with heavier cross-functional sign-off chains, where several
+# roles can veto before a decision is final. Pick one framework per domain
+# during the RACI Mapping workshop
+# (../../playbook/workshop-agendas/raci-mapping-workshop.md).
+# Validate against ../schemas/rapid-matrix.schema.json
+# "decide" must be exactly one role.
+
+domain: "{{domain_name}}"
+
+decisions:
+  - decision_type: "Local schema change (domain-owned asset)"
+    recommend: ["Data Steward"]
+    agree: ["Domain Business Owner"]
+    perform: ["Data Engineer"]
+    input: []
+    decide: "Domain Business Owner"
+
+  - decision_type: "Schema change to shared/global catalog"
+    recommend: ["Hub Architect", "Data Steward"]
+    agree: ["Domain Business Owner", "Central Hub Committee"]
+    perform: ["Hub Architect"]
+    input: ["Executive Sponsor"]
+    decide: "Central Hub Committee"
+
+  - decision_type: "New data contract approval"
+    recommend: ["Data Steward"]
+    agree: ["Domain Business Owner"]
+    perform: ["Data Engineer"]
+    input: ["Downstream consumer domains"]
+    decide: "Domain Business Owner"
+
+  - decision_type: "Cross-domain metric collision resolution"
+    recommend: ["Data Steward (originating domain)"]
+    agree: ["Data Stewards of affected domains"]
+    perform: ["Hub Architect"]
+    input: ["Executive Sponsor"]
+    decide: "Central Hub Committee"
+
+  - decision_type: "Access grant/revocation"
+    recommend: ["Data Steward"]
+    agree: ["Security/IAM team"]
+    perform: ["Security/IAM team"]
+    input: []
+    decide: "Domain Business Owner"
+
+  - decision_type: "Sensitive/PII tagging sign-off"
+    recommend: ["Data Engineer"]
+    agree: ["Legal/Compliance"]
+    perform: ["Data Engineer"]
+    input: ["Domain Business Owner"]
+    decide: "Data Governance Manager"

@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cegeka-nordic.example/schemas/daci-matrix.schema.json",
+  "title": "DACI Matrix",
+  "description": "Schema for a governance DACI matrix mapping decision types to Driver/Approver/Contributors/Informed roles. Alternative to RACI (see raci-matrix.schema.json) for clients whose decisions are more initiative/approval-shaped than ongoing operational work.",
+  "type": "object",
+  "required": ["domain", "decisions"],
+  "properties": {
+    "domain": {
+      "type": "string",
+      "description": "Domain or council this DACI matrix applies to."
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["decision_type", "driver", "approver"],
+        "properties": {
+          "decision_type": { "type": "string" },
+          "driver": {
+            "type": "string",
+            "description": "Single role who owns driving the decision to a recommendation. Must be exactly one."
+          },
+          "approver": {
+            "type": "string",
+            "description": "Single role with final sign-off authority. Must be exactly one."
+          },
+          "contributors": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Role(s) whose input shapes the recommendation."
+          },
+          "informed": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

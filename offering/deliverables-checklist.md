@@ -4,11 +4,12 @@ Each tier ends with a client sign-off against this checklist. Use this as the ex
 
 ## Tier 1 — Assess & Charter (Days 1–30)
 
-- [ ] Maturity assessment completed (`../offering/maturity-assessment-instrument.xlsx`) and recommended starting Wave agreed with the client
+- [ ] Maturity assessment completed (`../offering/maturity-assessment-instrument.html`), including the Maturity Wheel reviewed live in the workshop, and recommended starting Wave agreed with the client
+- [ ] Governing-document inventory completed (`../offering/governing-document-inventory.md`) and any conflicts with the new Hub/Spoke charter resolved
 - [ ] Executive Sponsor and Data Governance Manager formally appointed (named individuals, not roles)
 - [ ] Operational Governance Committee Charter drafted and signed, including voting mechanics
 - [ ] Domain Business Owners and Data Stewards identified for the pilot Spoke(s)
-- [ ] RACI matrix completed and reviewed by all named owners (`governance-as-code/raci/raci-matrix.template.yaml` instantiated)
+- [ ] Decision-rights matrix completed and reviewed by all named owners — RACI by default, or DACI/RAPID where it fits better (`governance-as-code/raci/raci-matrix.template.yaml`, `daci-matrix.template.yaml`, or `rapid-matrix.template.yaml` instantiated)
 - [ ] Hub and pilot Spoke charters instantiated from templates (`governance-as-code/councils/`) and ratified
 - [ ] First Operational Committee session held; meeting cadence set
 
@@ -33,3 +34,5 @@ Each tier ends with a client sign-off against this checklist. Use this as the ex
 - [ ] Client's platform team has forked/owns the `governance-as-code/` repo
 - [ ] Run-the-Hub retainer discussed (accept/decline documented)
 - [ ] Additional Spoke rollout roadmap discussed, if applicable
+- [ ] Immersion program discussed (accept/decline documented)
+
