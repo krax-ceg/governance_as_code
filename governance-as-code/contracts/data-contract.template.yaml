@@ -1,0 +1,101 @@
+# Data contract template (Open Data Contract Standard, bitol.io/odcs/v1alpha1).
+# Validate against ../schemas/odcs-data-contract.schema.json
+# This file is normally NOT hand-authored: the Databricks/Fabric onboarding
+# skills (../../.claude/skills/) generate one of these per introspected table,
+# prompting the operator only for the Core 10 fields that can't be inferred
+# from the platform (owner, steward, classification, criticality, support
+# channel). See ../schemas/core10-and-31-attribute-framework.md for the field
+# catalogue this template implements.
+#
+# This filled example mirrors the procurement pilot domain used elsewhere in
+# this repo (../examples/procurement-spoke/).
+
+apiVersion: "bitol.io/odcs/v1alpha1"
+kind: "DataContract"
+
+metadata:
+  id: "urn:ent:domain:procurement:product:factory_lead_times"
+  version: "1.0.0"
+  status: "active"
+  source_system_id: "sys_sap_erp_se"
+  data_residency_region: "eu-central-1"
+
+accountability:
+  domain: "procurement"
+  data_owner:
+    name: "{{data_owner_name}}"
+    email: "{{data_owner_email}}"
+  data_steward:
+    name: "{{data_steward_name}}"
+    email: "{{data_steward_email}}"
+  classification: "restricted"
+  criticality: "tier-1"
+  support_channel: "#help-procurement-data"
+  team:
+    name: "procurement-analytics"
+    members:
+      - "{{data_owner_name}}"
+      - "{{data_steward_name}}"
+
+semantics:
+  business_glossary_link: "https://glossary.enterprise.com/BG-9923"
+  business_definition: >
+    Elapsed time from Purchase Order Creation to Physical Receipt at the
+    target assembly facility. Explicitly scoped this way to avoid the
+    cross-site "Lead Time" definition mismatch described in the source
+    report (Section 3.4) -- restate this definition, do not assume it.
+  units_of_measurement:
+    calculated_lead_time_days: "decimal_days"
+
+lifecycle:
+  effective_from: "2026-01-01"
+
+config:
+  grain_keys:
+    - "purchase_order_id"
+    - "factory_id"
+  source_feeds:
+    - "urn:ent:domain:manufacturing:source:sweden_assembly_bom"
+    - "urn:ent:domain:manufacturing:source:germany_assembly_bom"
+
+service_level_agreement:
+  update_frequency: "daily"
+  max_latency_minutes: 1440
+  target_availability_percentage: 99.9
+
+quality_rules:
+  drift_thresholds:
+    ks_test_p_value_floor: 0.05
+    psi_warn: 0.10
+    psi_quarantine: 0.25
+
+schema:
+  type: "object"
+  additionalProperties: false
+  required:
+    - "purchase_order_id"
+    - "factory_id"
+    - "calculated_lead_time_days"
+    - "processed_at"
+  properties:
+    purchase_order_id:
+      type: "string"
+      pattern: "^PO-[0-9]{8}$"
+    factory_id:
+      type: "string"
+      enum: ["SE_GBG", "DE_STU", "US_GSP"]
+    calculated_lead_time_days:
+      type: "number"
+      minimum: 0.01
+      maximum: 365.0
+    processed_at:
+      type: "string"
+      format: "date-time"
+
+security_and_privacy:
+  pii_fields: []
+  masking_rules:
+    factory_id:
+      mask_type: "hashing"
+      retention_period_days: 2555
+  access_policy_ref: "../policies/pbac/access-policy.rego"
