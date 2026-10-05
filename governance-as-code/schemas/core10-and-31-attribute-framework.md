@@ -7,7 +7,7 @@
 | Tier | Purpose | Enforced by |
 |---|---|---|
 | **Core 10** | The minimum fields a data contract must carry to be promoted past the CI gate (Bronze → Gold). Missing any of these blocks the PR. | `governance-as-code/schemas/odcs-data-contract.schema.json` (`required`), CI workflow |
-| **Full 31** | Catalog-grade metadata expected once an asset is a registered Gold Enterprise Data Product. Not all 31 are required at first ingestion — they accumulate through Phase 2–3 of the playbook. | Same schema, as optional properties; scored in the maturity assessment instrument (`../../offering/maturity-assessment-instrument.xlsx`) |
+| **Full 31** | Catalog-grade metadata expected once an asset is a registered Gold Enterprise Data Product. Not all 31 are required at first ingestion — they accumulate through Phase 2–3 of the playbook. | Same schema, as optional properties; scored in the maturity assessment instrument (`../../offering/maturity-assessment-instrument.html`) |
 
 ## Core 10 (CI-blocking gate)
 
@@ -64,3 +64,4 @@ Core 10 above, plus 21 additional fields grouped by category:
 ## Relationship to the generated artifacts
 
 The Databricks and Fabric onboarding skills (`.claude/skills/governance-onboard-databricks/`, `.claude/skills/governance-onboard-fabric/`) populate Core 10 automatically where introspectable (asset ID, schema, source system) and prompt the operator for the remainder (owner, steward, classification, criticality, support channel) — these five cannot be inferred from the platform and must come from a human during onboarding. See `../contracts/data-contract.template.yaml` for the resulting shape.
+
