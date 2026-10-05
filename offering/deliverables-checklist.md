@@ -4,7 +4,7 @@ Each tier ends with a client sign-off against this checklist. Use this as the ex
 
 ## Tier 1 — Assess & Charter (Days 1–30)
 
-- [ ] Maturity assessment completed (`../offering/maturity-assessment-instrument.xlsx`), including the Maturity Wheel reviewed live in the workshop, and recommended starting Wave agreed with the client
+- [ ] Maturity assessment completed (`../offering/maturity-assessment-instrument.html`), including the Maturity Wheel reviewed live in the workshop, and recommended starting Wave agreed with the client
 - [ ] Governing-document inventory completed (`../offering/governing-document-inventory.md`) and any conflicts with the new Hub/Spoke charter resolved
 - [ ] Executive Sponsor and Data Governance Manager formally appointed (named individuals, not roles)
 - [ ] Operational Governance Committee Charter drafted and signed, including voting mechanics
@@ -35,3 +35,4 @@ Each tier ends with a client sign-off against this checklist. Use this as the ex
 - [ ] Run-the-Hub retainer discussed (accept/decline documented)
 - [ ] Additional Spoke rollout roadmap discussed, if applicable
 - [ ] Immersion program discussed (accept/decline documented)
+
