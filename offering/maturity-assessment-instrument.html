@@ -157,6 +157,20 @@
   .readme-list li { margin-bottom: 6px; }
   code { background: var(--grid); border-radius: 4px; padding: 1px 5px; font-size: 12px; }
   .status-pill { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--grid); color: var(--text-secondary); }
+
+  @media print {
+    :root { color-scheme: light; }
+    body { background: #fff; color: #1a1a19; }
+    .toolbar, #tooltip { display: none !important; }
+    .card {
+      background: #fff;
+      border: 1px solid #ccc;
+      box-shadow: none;
+      break-inside: avoid;
+    }
+    details { break-inside: avoid; }
+    a { color: #1a1a19; text-decoration: underline; }
+  }
 </style>
 </head>
 <body>
@@ -203,7 +217,7 @@
     <h2>Results</h2>
     <div class="results-grid" id="results-grid"></div>
     <div class="weight-check" id="weight-check"></div>
-    <div class="overall-row">
+    <div class="overall-row" role="status" aria-live="polite">
       <div>
         <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.02em; color:var(--text-muted);">Overall Maturity Score</div>
         <div class="overall-score" id="overall-score">0</div>
