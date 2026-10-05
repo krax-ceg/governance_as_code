@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cegeka-nordic.example/schemas/council-charter.schema.json",
+  "title": "Council Charter",
+  "description": "Schema for a Hub or Spoke governance council charter.",
+  "type": "object",
+  "required": ["council", "type", "mandate", "operational_scope", "authority", "voting", "arbitration"],
+  "properties": {
+    "council": {
+      "type": "string",
+      "description": "Name of the council, e.g. 'Central Hub' or 'Procurement Spoke'."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["hub", "spoke"]
+    },
+    "domain": {
+      "type": "string",
+      "description": "For spoke councils: the business domain this council governs. Omit for hub."
+    },
+    "mandate": {
+      "type": "string",
+      "description": "Primary mandate of this council, in plain language."
+    },
+    "operational_scope": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "What this council has operational authority over."
+    },
+    "authority": {
+      "type": "object",
+      "required": ["veto_rights", "decision_rights"],
+      "properties": {
+        "veto_rights": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Conditions under which this council can veto a proposal."
+        },
+        "decision_rights": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Decisions this council can make unilaterally within its scope."
+        }
+      }
+    },
+    "voting": {
+      "type": "object",
+      "required": ["mechanism", "threshold"],
+      "properties": {
+        "mechanism": {
+          "type": "string",
+          "enum": ["majority", "supermajority", "consensus"]
+        },
+        "threshold": {
+          "type": "string",
+          "description": "e.g. '2/3', 'simple_majority', 'unanimous'."
+        },
+        "applies_to": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Which decision types this voting rule governs."
+        }
+      }
+    },
+    "arbitration": {
+      "type": "object",
+      "required": ["escalation_path"],
+      "properties": {
+        "escalation_path": {
+          "type": "string",
+          "description": "Name of the council/role this escalates to when unresolved."
+        },
+        "sla_days": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum days to resolve an escalated arbitration."
+        }
+      }
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role"],
+        "properties": {
+          "role": { "type": "string" },
+          "name": { "type": "string" }
+        }
+      }
+    }
+  }
+}

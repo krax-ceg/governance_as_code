@@ -1,0 +1,39 @@
+# Spoke charter template — copy this file per domain (e.g. spoke-procurement.yaml)
+# and fill in the {{placeholders}}. Validate against ../schemas/council-charter.schema.json
+# See ../examples/procurement-spoke/ for a filled-in example.
+
+council: "{{domain_name}} Spoke"
+type: spoke
+domain: "{{domain_name}}"
+
+mandate: >
+  Maintain semantic accuracy, data contract YAMLs, schema transformations,
+  and metric certifications for the {{domain_name}} domain.
+
+operational_scope:
+  - "{{domain_name}}-specific datasets"
+  - "Local domain database schemas"
+  - "Local Platinum-layer sandboxes"
+
+authority:
+  veto_rights:
+    - "Inputs from other Spokes that violate {{domain_name}} domain definitions"
+  decision_rights:
+    - "Domain-specific metadata and schema changes not touching the shared catalog"
+    - "Local data contract configuration"
+
+voting:
+  mechanism: supermajority
+  threshold: "2/3"
+  applies_to:
+    - "Changes to Gold-layer metrics owned by this domain"
+
+arbitration:
+  escalation_path: "Central Hub"
+  sla_days: 10
+
+members:
+  - role: "Domain Business Owner"
+    name: "{{business_owner_name}}"
+  - role: "Data Steward"
+    name: "{{data_steward_name}}"

@@ -1,0 +1,45 @@
+# Central Hub charter — governs cross-domain standards and acts as final arbitration body.
+# Validate against ../schemas/council-charter.schema.json
+# Edit the values below with the client during the Chartering Kickoff workshop
+# (see ../../playbook/workshop-agendas/chartering-kickoff.md).
+
+council: "Central Hub"
+type: hub
+
+mandate: >
+  Set global framework policies, CI/CD blueprints, schema registries, and
+  security standards. Serve as the final escalation body for cross-domain
+  schema or naming disputes.
+
+operational_scope:
+  - "Cross-domain integrations"
+  - "Catalog index schema"
+  - "Shared infrastructure platforms (schema registries, CI/CD blueprints)"
+
+authority:
+  veto_rights:
+    - "Deployments violating core metadata standards"
+    - "Changes failing CI/CD lint or policy tests"
+  decision_rights:
+    - "Approve/reject global metadata schema changes"
+    - "Set enterprise-wide security and access standards"
+    - "Arbitrate cross-spoke naming or semantic collisions"
+
+voting:
+  mechanism: supermajority
+  threshold: "2/3"
+  applies_to:
+    - "Global metadata schema updates"
+    - "Standard protocol changes"
+
+arbitration:
+  escalation_path: "Executive Sponsor"
+  sla_days: 10
+
+members:
+  - role: "Executive Sponsor"
+    name: "{{exec_sponsor_name}}"
+  - role: "Data Governance Manager"
+    name: "{{governance_manager_name}}"
+  - role: "Hub Architect (Cegeka)"
+    name: "{{cegeka_architect_name}}"

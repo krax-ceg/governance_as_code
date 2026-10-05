@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cegeka-nordic.example/schemas/raci-matrix.schema.json",
+  "title": "RACI Matrix",
+  "description": "Schema for a governance RACI matrix mapping decision types to accountable roles.",
+  "type": "object",
+  "required": ["domain", "decisions"],
+  "properties": {
+    "domain": {
+      "type": "string",
+      "description": "Domain or council this RACI matrix applies to."
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["decision_type", "responsible", "accountable"],
+        "properties": {
+          "decision_type": { "type": "string" },
+          "responsible": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Role(s) who do the work."
+          },
+          "accountable": {
+            "type": "string",
+            "description": "Single role with final sign-off authority. Must be exactly one."
+          },
+          "consulted": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "informed": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

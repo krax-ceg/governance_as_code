@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Governance-as-Code Accelerator: Cegeka Nordic Advisory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#002B49',
+                        slate: '#4A5568',
+                        gold: '#B8860B',
+                        risk: '#A52A2A',
+                        canvas: '#FCFDFE',
+                        divider: '#E2E8F0'
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FCFDFE; color: #4A5568; font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Playfair Display', serif; }
+        .code-font { font-family: 'JetBrains Mono', monospace; }
+        .strategic-callout { border-left: 4px solid #002B49; background-color: rgba(0, 43, 73, 0.03); }
+        .risk-callout { border-left: 4px solid #A52A2A; background-color: rgba(165, 42, 42, 0.04); }
+        .gold-callout { border-left: 4px solid #B8860B; background-color: rgba(184, 134, 11, 0.04); }
+        .exhibit-source { font-size: 0.7rem; color: rgba(74, 85, 104, 0.7); font-family: 'JetBrains Mono', monospace; }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; color: black; counter-reset: page; }
+            .page-break { page-break-before: always; }
+            .shadow-sm, .shadow-md, .shadow-lg { box-shadow: none !important; border: 1px solid #E2E8F0; }
+            .print-page-number::after { counter-increment: page; content: "Page " counter(page); }
+            @page { margin: 18mm 14mm 16mm 14mm; }
+        }
+    </style>
+</head>
+<body class="bg-canvas antialiased min-h-screen text-slate flex flex-col">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-divider shadow-sm no-print">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <span class="text-xs font-bold uppercase tracking-widest text-navy bg-navy/5 px-2.5 py-1 rounded">Advisory Offering</span>
+                <span class="text-sm font-semibold text-slate/70">Cegeka Nordic</span>
+            </div>
+            <nav class="hidden md:flex space-x-6 text-sm font-medium text-slate">
+                <a href="#executive-summary" class="hover:text-navy transition-colors">Summary</a>
+                <a href="#model" class="hover:text-navy transition-colors">The Model</a>
+                <a href="#comparison" class="hover:text-navy transition-colors">Hub vs. Spoke</a>
+                <a href="#roadmap" class="hover:text-navy transition-colors">90-Day Roadmap</a>
+                <a href="#as-code" class="hover:text-navy transition-colors">Why Code</a>
+                <a href="#next-steps" class="hover:text-navy transition-colors">Get Started</a>
+            </nav>
+            <div class="flex items-center space-x-3">
+                <button onclick="window.print()" class="inline-flex items-center space-x-2 bg-navy text-white text-xs font-semibold px-4 py-2 rounded shadow hover:bg-navy/90 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    <span>Print / PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-10 flex-grow w-full space-y-12">
+
+        <!-- Title & Metadata Block -->
+        <section class="border-b border-divider pb-8">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-gold bg-gold/10 px-3 py-1 rounded-full">Client Proposal Asset</span>
+                    <span class="text-xs font-mono text-slate/70">Ref: GAC-ACCELERATOR-2026</span>
+                </div>
+                <div class="text-sm text-slate font-medium">
+                    <strong>Practice:</strong> Cegeka Nordic Advisory
+                </div>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-navy mb-3">Governance-as-Code Accelerator</h1>
+            <p class="text-lg text-slate leading-relaxed">
+                Federated data governance — the councils, charters, and access controls — delivered as versioned, testable code, not a slide deck that goes stale the week it's approved.
+            </p>
+        </section>
+
+        <!-- Section 1: Executive Summary -->
+        <section id="executive-summary" class="space-y-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-2 h-6 bg-navy rounded-sm"></div>
+                <h2 class="text-2xl font-bold text-navy">1. The Governance Trap</h2>
+            </div>
+
+            <p class="text-slate leading-relaxed">
+                Every data governance program eventually hits the same wall. Centralize too hard and the governance team becomes the bottleneck for every schema change and access request. Decentralize too far and domains route around the bottleneck — producing uncatalogued pipelines, duplicated logic, and metrics nobody can audit. Most organizations swing between the two and never land on a model that holds.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                <div class="bg-white p-5 rounded-lg border border-divider shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="w-8 h-8 rounded bg-risk/10 text-risk font-bold flex items-center justify-center mb-3 font-mono text-sm">01</div>
+                        <h4 class="font-semibold text-navy text-base mb-2">$12.9M / year</h4>
+                        <p class="text-xs text-slate leading-relaxed">
+                            Industry-average annual cost of poor data quality: operational inefficiency, compliance penalties, and failed decisions.
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-divider text-xs text-risk font-semibold uppercase tracking-wider">
+                        Cost of Inaction
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-lg border border-divider shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="w-8 h-8 rounded bg-navy/10 text-navy font-bold flex items-center justify-center mb-3 font-mono text-sm">02</div>
+                        <h4 class="font-semibold text-navy text-base mb-2">15–25% revenue protected</h4>
+                        <p class="text-xs text-slate leading-relaxed">
+                            Estimated share of currently leaking revenue protected by programmatic, federated governance done right.
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-divider text-xs text-gold font-semibold uppercase tracking-wider">
+                        Opportunity
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-lg border border-divider shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="w-8 h-8 rounded bg-gold/10 text-gold font-bold flex items-center justify-center mb-3 font-mono text-sm">03</div>
+                        <h4 class="font-semibold text-navy text-base mb-2">Weeks → hours</h4>
+                        <p class="text-xs text-slate leading-relaxed">
+                            Automated access controls and data contracts compress strategic decision timelines dramatically once governance is enforced, not just documented.
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-divider text-xs text-navy font-semibold uppercase tracking-wider">
+                        Outcome
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Model (Mermaid + Synthesis) -->
+        <section id="model" class="space-y-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-2 h-6 bg-navy rounded-sm"></div>
+                <h2 class="text-2xl font-bold text-navy">2. The Model: Hub-and-Spoke, Encoded</h2>
+            </div>
+
+            <p class="text-slate leading-relaxed">
+                The Accelerator installs a federated operating model: a central Hub that owns global standards, and domain Spokes that own their own data with full autonomy — bounded by a documented arbitration path back to the Hub.
+            </p>
+
+            <p class="text-xs font-semibold uppercase tracking-wider text-navy/70">Exhibit 1: Federated Governance Topology</p>
+
+            <div class="bg-white p-6 rounded-lg border border-divider shadow-sm overflow-x-auto">
+                <div class="mermaid">
+flowchart TB
+    Hub["Central Hub<br/>Standards, schema registries,<br/>CI/CD blueprints, security policy"]
+    S1["Spoke: Procurement<br/>Local schemas, data contracts"]
+    S2["Spoke: Manufacturing<br/>Local schemas, data contracts"]
+    S3["Spoke: Logistics<br/>Local schemas, data contracts"]
+    Hub -- "global standards &amp; veto rights" --> S1
+    Hub -- "global standards &amp; veto rights" --> S2
+    Hub -- "global standards &amp; veto rights" --> S3
+    S1 -. "cross-domain arbitration" .-> Hub
+    S2 -. "cross-domain arbitration" .-> Hub
+    S3 -. "cross-domain arbitration" .-> Hub
+    style Hub fill:#f0f7ff,stroke:#002B49,stroke-width:2px;
+                </div>
+            </div>
+            <p class="exhibit-source">Source: Cegeka Nordic Advisory, federated governance operating model, 2026</p>
+
+            <div class="strategic-callout p-5 rounded-r-lg space-y-2">
+                <div class="flex items-center space-x-2 text-navy font-bold text-sm uppercase tracking-wide">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>Strategic Synthesis: The differentiator is enforcement, not description</span>
+                </div>
+                <p class="text-sm text-slate leading-relaxed">
+                    What makes this an accelerator rather than a strategy exercise: the charters, voting rules, RACI assignments, and access policies shown above are delivered as versioned YAML and OPA/Rego policy code from day one. The client's platform team forks a working repository at handover — not a PDF that nobody re-reads after the kickoff.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: Hub vs Spoke Comparison Table -->
+        <section id="comparison" class="space-y-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-2 h-6 bg-navy rounded-sm"></div>
+                <h2 class="text-2xl font-bold text-navy">3. Who Owns What</h2>
+            </div>
+
+            <p class="text-xs font-semibold uppercase tracking-wider text-navy/70">Exhibit 2: Hub vs. Spoke Authority Matrix</p>
+
+            <div class="bg-white rounded-lg border border-divider shadow-sm overflow-hidden overflow-x-auto">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-navy text-white text-xs uppercase tracking-wider font-semibold">
+                            <th class="p-4">Dimension</th>
+                            <th class="p-4">Central Hub</th>
+                            <th class="p-4">Domain Spokes</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-divider text-slate">
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">Primary Mandate</td>
+                            <td class="p-4 text-xs leading-relaxed">Global framework policies, CI/CD blueprints, schema registries, security standards</td>
+                            <td class="p-4 text-xs leading-relaxed">Semantic accuracy, data contract YAMLs, schema transformations, metric certifications</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">Operational Scope</td>
+                            <td class="p-4 text-xs leading-relaxed">Cross-domain integrations, catalog index schemas, infrastructure platforms</td>
+                            <td class="p-4 text-xs leading-relaxed">Domain-specific datasets, local sandboxes</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">Authority &amp; Veto</td>
+                            <td class="p-4 text-xs leading-relaxed">Vetoes deployments violating core metadata standards or failing CI/CD tests</td>
+                            <td class="p-4 text-xs leading-relaxed">Local domain decision rights; can veto inputs violating domain definitions</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">Voting</td>
+                            <td class="p-4 text-xs leading-relaxed">2/3 majority for global schema/standard updates</td>
+                            <td class="p-4 text-xs leading-relaxed">Consensus-driven within Spoke; 2/3 domain majority for Gold-layer metric changes</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">Arbitration</td>
+                            <td class="p-4 text-xs leading-relaxed">Final escalation body for cross-domain disputes</td>
+                            <td class="p-4 text-xs leading-relaxed">Initiates dispute resolution, documents semantic overlap</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="exhibit-source">Source: Cegeka Nordic Advisory, federated governance charter template, 2026</p>
+        </section>
+
+        <!-- Section 4: 90-Day Roadmap Table -->
+        <section id="roadmap" class="space-y-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-2 h-6 bg-navy rounded-sm"></div>
+                <h2 class="text-2xl font-bold text-navy">4. The 90-Day Delivery Model</h2>
+            </div>
+
+            <p class="text-slate leading-relaxed">
+                Three sequential 30-day tiers, each ending in a client sign-off gate. Start with Tier 1 alone, or commit to the full Accelerator at a discount versus buying tiers separately.
+            </p>
+
+            <p class="text-xs font-semibold uppercase tracking-wider text-navy/70">Exhibit 3: Three-Tier, 90-Day Roadmap</p>
+
+            <div class="bg-white rounded-lg border border-divider shadow-sm overflow-hidden">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-navy text-white text-xs uppercase tracking-wider font-semibold">
+                            <th class="p-4">Tier</th>
+                            <th class="p-4">Timeline</th>
+                            <th class="p-4">Focus</th>
+                            <th class="p-4">Exit Deliverable</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-divider text-slate">
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">1. Assess &amp; Charter</td>
+                            <td class="p-4 text-xs font-mono">Days 1–30</td>
+                            <td class="p-4 text-xs leading-relaxed">Executive Sponsor &amp; Governance Manager appointed, Hub/Spoke charter drafted with voting mechanics, RACI mapped, committee cadence launched</td>
+                            <td class="p-4 text-xs leading-relaxed">Signed charter + RACI matrix, board-ready in 30 days</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">2. Map &amp; Secure</td>
+                            <td class="p-4 text-xs font-mono">Days 31–60</td>
+                            <td class="p-4 text-xs leading-relaxed">Asset discovery &amp; PII tagging, pilot data contracts in YAML, baseline RBAC + column-level masking</td>
+                            <td class="p-4 text-xs leading-relaxed">Working pilot data contract, security baseline live</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-medium text-navy">3. Automate &amp; Scale</td>
+                            <td class="p-4 text-xs font-mono">Days 61–90</td>
+                            <td class="p-4 text-xs leading-relaxed">Schema registry validation, Policy-Based &amp; Just-in-Time access via OPA/Rego, first programmatic audit, departmental scorecards</td>
+                            <td class="p-4 text-xs leading-relaxed">Enforced access policy, audited and scored in production</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="exhibit-source">Source: Cegeka Nordic Advisory, phased implementation blueprint, 2026</p>
+
+            <div class="gold-callout p-5 rounded-r-lg space-y-2">
+                <div class="flex items-center space-x-2 text-gold font-bold text-sm uppercase tracking-wide">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    <span>Why the order matters</span>
+                </div>
+                <p class="text-sm text-slate leading-relaxed">
+                    Deploying PBAC, drift monitoring, and federated councils simultaneously causes operational paralysis. Organizational foundations (Tier 1) earn the executive mandate that makes Tier 2's technical mapping possible, which in turn makes Tier 3's automation safe to turn on.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 5: Why "As Code" Matters -->
+        <section id="as-code" class="space-y-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-2 h-6 bg-navy rounded-sm"></div>
+                <h2 class="text-2xl font-bold text-navy">5. Why "As Code" Matters</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg border border-divider shadow-sm space-y-4">
+                    <div class="flex items-center space-x-2 text-risk font-semibold text-sm uppercase tracking-wide">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        <span>The Typical Governance Deliverable</span>
+                    </div>
+                    <ul class="space-y-3 text-sm leading-relaxed text-slate">
+                        <li class="flex items-start space-x-2"><span class="text-navy font-bold">•</span><span><strong>Static PDF charter:</strong> approved once, re-read rarely, drifts from reality within a quarter.</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-navy font-bold">•</span><span><strong>Documented access rules:</strong> enforcement depends on people remembering and following them manually.</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-navy font-bold">•</span><span><strong>Re-engagement required:</strong> every new domain needs a fresh consulting pass to extend the model.</span></li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg border border-divider shadow-sm space-y-4">
+                    <div class="flex items-center space-x-2 text-gold font-semibold text-sm uppercase tracking-wide">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7c0-2-1.5-3-3.5-3h-9C5.5 4 4 5 4 7zm0 4h16M4 15h16"/></svg>
+                        <span>The Governance-as-Code Deliverable</span>
+                    </div>
+                    <ul class="space-y-3 text-sm leading-relaxed text-slate">
+                        <li class="flex items-start space-x-2"><span class="text-navy font-bold">•</span><span><strong>Versioned YAML charters &amp; RACI:</strong> reviewable in pull requests, changes tracked like any other code change.</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-navy font-bold">•</span><span><strong>OPA/Rego policies with automated tests:</strong> access control and data contract enforcement actually run in CI, not just in a policy document.</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-navy font-bold">•</span><span><strong>Forkable at handover:</strong> the client's own platform team extends the same repo to onboard the next domain at a fraction of the original cost.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Call to Action -->
+        <section id="next-steps" class="space-y-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-2 h-6 bg-navy rounded-sm"></div>
+                <h2 class="text-2xl font-bold text-navy">6. Where to Start</h2>
+            </div>
+
+            <div class="bg-navy text-white p-8 rounded-lg shadow-sm space-y-4">
+                <h3 class="font-serif text-2xl font-bold">Start with Tier 1 — Assess &amp; Charter</h3>
+                <p class="text-sm text-white/80 leading-relaxed max-w-2xl">
+                    A low-commitment, 30-day engagement that delivers a board-ready charter and RACI matrix — and is the natural on-ramp into the full 90-day Accelerator once your organization sees it working.
+                </p>
+                <div class="pt-2">
+                    <span class="inline-flex items-center text-xs font-semibold uppercase tracking-wider bg-gold/20 text-gold px-3 py-1.5 rounded-full">
+                        Contact Cegeka Nordic Advisory to scope your Tier 1 engagement
+                    </span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-divider mt-16 py-8 text-xs text-slate/70 print-page-number">
+        <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <p class="font-semibold text-navy">Cegeka Nordic — Advisory Practice</p>
+                <p class="mt-1 text-slate/60">Governance-as-Code Accelerator is a standardized advisory offering of Cegeka Nordic.</p>
+            </div>
+            <div class="text-right text-slate/60 text-[11px]">
+                <p>© 2026 Cegeka. All rights reserved.</p>
+                <p class="mt-0.5">Prepared for client discussion purposes</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                fontFamily: 'Inter, sans-serif',
+                primaryColor: '#f0f7ff',
+                primaryTextColor: '#002B49',
+                primaryBorderColor: '#002B49',
+                lineColor: '#4A5568',
+                secondaryColor: '#fffaf0',
+                tertiaryColor: '#FCFDFE'
+            }
+        });
+    </script>
+</body>
+</html>

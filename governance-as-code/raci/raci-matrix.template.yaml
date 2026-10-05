@@ -1,0 +1,44 @@
+# RACI matrix template — copy per domain and fill in roles during the
+# RACI Mapping workshop (../../playbook/workshop-agendas/raci-mapping-workshop.md).
+# Validate against ../schemas/raci-matrix.schema.json
+# "accountable" must be exactly one role — ambiguity here is the most common
+# cause of Phase 2 delays.
+
+domain: "{{domain_name}}"
+
+decisions:
+  - decision_type: "Local schema change (domain-owned asset)"
+    responsible: ["Data Steward"]
+    accountable: "Domain Business Owner"
+    consulted: ["Data Engineer"]
+    informed: ["Data Governance Manager"]
+
+  - decision_type: "Schema change to shared/global catalog"
+    responsible: ["Data Steward", "Hub Architect"]
+    accountable: "Central Hub Committee"
+    consulted: ["Domain Business Owner"]
+    informed: ["Executive Sponsor"]
+
+  - decision_type: "New data contract approval"
+    responsible: ["Data Steward"]
+    accountable: "Domain Business Owner"
+    consulted: ["Data Engineer", "Downstream consumer domains"]
+    informed: ["Data Governance Manager"]
+
+  - decision_type: "Cross-domain metric collision resolution"
+    responsible: ["Data Steward (originating domain)"]
+    accountable: "Central Hub Committee"
+    consulted: ["Data Stewards of affected domains"]
+    informed: ["Executive Sponsor"]
+
+  - decision_type: "Access grant/revocation"
+    responsible: ["Data Steward"]
+    accountable: "Domain Business Owner"
+    consulted: ["Security/IAM team"]
+    informed: ["Data Governance Manager"]
+
+  - decision_type: "Sensitive/PII tagging sign-off"
+    responsible: ["Data Engineer"]
+    accountable: "Data Governance Manager"
+    consulted: ["Legal/Compliance"]
+    informed: ["Domain Business Owner"]

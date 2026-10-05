@@ -1,0 +1,39 @@
+# Filled-in example of ../../councils/spoke-charter.template.yaml for a
+# "Procurement" pilot domain. Use this as a reference when instantiating a
+# real client's first Spoke.
+
+council: "Procurement Spoke"
+type: spoke
+domain: "procurement"
+
+mandate: >
+  Maintain semantic accuracy, data contract YAMLs, schema transformations,
+  and metric certifications for the procurement domain.
+
+operational_scope:
+  - "procurement-specific datasets"
+  - "Local domain database schemas"
+  - "Local Platinum-layer sandboxes"
+
+authority:
+  veto_rights:
+    - "Inputs from other Spokes that violate procurement domain definitions"
+  decision_rights:
+    - "Domain-specific metadata and schema changes not touching the shared catalog"
+    - "Local data contract configuration"
+
+voting:
+  mechanism: supermajority
+  threshold: "2/3"
+  applies_to:
+    - "Changes to Gold-layer metrics owned by procurement"
+
+arbitration:
+  escalation_path: "Central Hub"
+  sla_days: 10
+
+members:
+  - role: "Domain Business Owner"
+    name: "Procurement VP (client-named)"
+  - role: "Data Steward"
+    name: "Procurement Analytics Lead (client-named)"

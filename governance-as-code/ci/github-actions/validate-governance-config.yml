@@ -1,0 +1,50 @@
+name: Validate Governance Config
+
+on:
+  pull_request:
+    paths:
+      - "governance-as-code/**"
+  push:
+    branches: [main]
+    paths:
+      - "governance-as-code/**"
+
+jobs:
+  validate-yaml-schemas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validator deps
+        run: pip install jsonschema pyyaml
+
+      - name: Validate council charters against schema
+        run: |
+          python governance-as-code/ci/validate_yaml.py \
+            --schema governance-as-code/schemas/council-charter.schema.json \
+            governance-as-code/councils/hub-charter.yaml \
+            governance-as-code/examples/procurement-spoke/spoke-procurement.yaml
+
+      - name: Validate RACI matrices against schema
+        run: |
+          python governance-as-code/ci/validate_yaml.py \
+            --schema governance-as-code/schemas/raci-matrix.schema.json \
+            governance-as-code/examples/procurement-spoke/raci-procurement.yaml
+
+  test-policies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up OPA
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Run policy tests
+        run: opa test governance-as-code/policies -v

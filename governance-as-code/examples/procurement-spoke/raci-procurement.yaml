@@ -1,0 +1,41 @@
+# Filled-in example of ../../raci/raci-matrix.template.yaml for the
+# Procurement pilot domain.
+
+domain: "procurement"
+
+decisions:
+  - decision_type: "Local schema change (domain-owned asset)"
+    responsible: ["Procurement Analytics Lead"]
+    accountable: "Procurement VP"
+    consulted: ["Data Engineer"]
+    informed: ["Data Governance Manager"]
+
+  - decision_type: "Schema change to shared/global catalog"
+    responsible: ["Procurement Analytics Lead", "Hub Architect"]
+    accountable: "Central Hub Committee"
+    consulted: ["Procurement VP"]
+    informed: ["Executive Sponsor"]
+
+  - decision_type: "New data contract approval"
+    responsible: ["Procurement Analytics Lead"]
+    accountable: "Procurement VP"
+    consulted: ["Data Engineer", "Finance (downstream consumer)"]
+    informed: ["Data Governance Manager"]
+
+  - decision_type: "Cross-domain metric collision resolution"
+    responsible: ["Procurement Analytics Lead"]
+    accountable: "Central Hub Committee"
+    consulted: ["Data Stewards of affected domains"]
+    informed: ["Executive Sponsor"]
+
+  - decision_type: "Access grant/revocation"
+    responsible: ["Procurement Analytics Lead"]
+    accountable: "Procurement VP"
+    consulted: ["Security/IAM team"]
+    informed: ["Data Governance Manager"]
+
+  - decision_type: "Sensitive/PII tagging sign-off"
+    responsible: ["Data Engineer"]
+    accountable: "Data Governance Manager"
+    consulted: ["Legal/Compliance"]
+    informed: ["Procurement VP"]
