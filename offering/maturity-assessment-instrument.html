@@ -320,8 +320,9 @@
 
   function overallScore() {
     var total = 0;
+    var wSum = weightSum() || 100;
     DIMENSIONS.forEach(function (d) {
-      total += dimensionSubtotal(d.key) * (Number(state.weights[d.key] || 0) / 100);
+      total += dimensionSubtotal(d.key) * (Number(state.weights[d.key] || 0) / wSum);
     });
     return total;
   }
