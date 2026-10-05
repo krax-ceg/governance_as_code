@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cegeka-nordic.example/schemas/rapid-matrix.schema.json",
+  "title": "RAPID Matrix",
+  "description": "Schema for a governance RAPID matrix mapping decision types to Recommend/Agree/Perform/Input/Decide roles. Alternative to RACI (see raci-matrix.schema.json) for clients with heavier cross-functional sign-off chains.",
+  "type": "object",
+  "required": ["domain", "decisions"],
+  "properties": {
+    "domain": {
+      "type": "string",
+      "description": "Domain or council this RAPID matrix applies to."
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["decision_type", "recommend", "decide"],
+        "properties": {
+          "decision_type": { "type": "string" },
+          "recommend": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Role(s) who develop the recommendation."
+          },
+          "agree": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Role(s) whose sign-off is required before the decision can proceed (veto power)."
+          },
+          "perform": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Role(s) who execute the decision once made."
+          },
+          "input": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Role(s) consulted for input but without veto power."
+          },
+          "decide": {
+            "type": "string",
+            "description": "Single role with final decision authority. Must be exactly one."
+          }
+        }
+      }
+    }
+  }
+}
